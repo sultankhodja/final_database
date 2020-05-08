@@ -1,0 +1,306 @@
+# Database connection
+import sqlite3
+# Making an error condition
+ERROR = {
+    1: 'Invalid Syntax'
+}
+conn = sqlite3.connect('books.db')
+
+c = conn.cursor()
+
+
+# Creating the databases with PK and FK
+# Linking them to each other
+
+
+# c.execute("""CREATE TABLE customer(
+#     customer_id INT AUTO_INCREMENT,
+#     first_name TEXT,
+#     last_name TEXT,
+#     street_address TEXT,
+#     city TEXT,
+#     state  TEXT,
+#     zip_code INT,
+#     PRIMARY KEY(customer_id)
+# )
+# """)
+#
+# c.execute(("""CREATE TABLE orders(
+#     order_number INT PRIMARY KEY,
+#     order_date TEXT,
+#     order_total INT,
+#     customer_id INT,
+#     FOREIGN KEY(customer_id) REFERENCES customer(customer_id)
+#     )"""))
+#
+# c.execute("""CREATE TABLE orderlineitem(
+#     order_number INT PRIMARY KEY,
+#     book_id INT,
+#     quantity INT,
+#     FOREIGN KEY(order_number) REFERENCES orders(order_number),
+#     FOREIGN KEY(book_id) REFERENCES books(book_id)
+# )
+# """)
+#
+# c.execute("""CREATE TABLE books(
+#     book_id INT PRIMARY KEY,
+#     ISBN INT,
+#     title TEXT,
+#     author TEXT,
+#     edition INT,
+#     publisher TEXT,
+#     price INT
+# )""")
+
+# Insert for customer database
+def insert():
+    customer_id = int(input('What is the customer number: '))
+    first = str(input('What is the name: '))
+    last = str(input('What is the last name: '))
+    street = str(input('What is the street address: '))
+    city = str(input('What is the city: '))
+    state = str(input('What is the state: '))
+    zip_code = int(input('What is the zip code: '))
+    with conn:
+        c.execute("INSERT INTO customer VALUES (:customer_id, :first, :last, :street, :city, :state, :zip_code )",
+                  {'customer_id': customer_id, 'first': first, 'last': last, 'street': street, 'city': city, 'state': state, 'zip_code': zip_code})
+        print('Data is Inserted')
+
+# Delete customer
+
+
+def delete():
+    customer_id = int(input('What is the customer number to remove: '))
+    with conn:
+        c.execute("DELETE FROM customer WHERE customer_id = :customer_id", {'customer_id': customer_id})
+        print('Data is removed')
+
+# Modifying the customer
+
+
+def modify():
+    customer_id = int(input('What is the customer number for the change: '))
+    first = str(input('What is the new name: '))
+    last = str(input('What is the new last name: '))
+    street = str(input('What is the new street address: '))
+    city = str(input('What is the new city: '))
+    state = str(input('What is the new state: '))
+    zip_code = int(input('What is the new zip code: '))
+    with conn:
+        c.execute("""UPDATE customer SET first = :first, last = :last, street = :street, city = :city,
+              state = :state, zip_code = :zip_code WHERE customer = :customer_id""", {'customer_id': customer_id,'first': first, 'last': last, 'street': street, 'city': city, 'state': state, 'zip_code': zip_code})
+        print('Data is Modified')
+
+# Getting all
+
+
+def get_all():
+    with conn:
+        c.execute("SELECT * FROM customer")
+        print(c.fetchall())
+
+
+# Inserting orders
+
+def insert_orders():
+    order_number = int(input('What is the order number: '))
+    order_date = str(input('What is the order date: '))
+    order_total = int(input('What is the order total: '))
+    customer_id = int(input('What is the customer id: '))
+    with conn:
+        c.execute("INSERT INTO orders VALUES (:order_number, :order_date, :order_total, :customer_id)",
+                      {'order_number': order_number, 'order_date': order_date, 'order_total': order_total, 'customer_id': customer_id})
+        print('Data is Inserted')
+
+# Deleting orders
+
+
+def delete_orders():
+    customer_id = int(input('What is the customer id: '))
+    with conn:
+        c.execute("DELETE FROM orders WHERE customer_id = :customer_id", {'customer_id': customer_id})
+        print('Data is removed')
+
+# Modifying orders
+
+
+def modify_orders():
+    order_number = int(input('What is the order number: '))
+    order_date = str(input('What is the order date: '))
+    order_total = int(input('What is the order total: '))
+    customer_id = int(input('What is the customer id: '))
+    with conn:
+        c.execute("""UPDATE orders SET order_number = :order_number, order_date = :order_date, order_total = :order_total,
+         customer_id = :customer_id""", {'order_number': order_number, 'order_date': order_date, 'order_total': order_total})
+        print('Data is Modified')
+
+# Getting all from orders
+
+
+def get_all_orders():
+    with conn:
+        c.execute("SELECT * FROM orders")
+        print(c.fetchall())
+
+# Inserting orderlineitem
+
+
+def insert_orderlineitem():
+    order_number = int(input('What is the order number: '))
+    book_id = int(input('What is the book id: '))
+    quantity = int(input('What is he quantity: '))
+    with conn:
+        c.execute("INSERT INTO orderlineitems VALUES (:order_number, :book_id, :quantity)",
+                      {'order_number': order_number, 'book_id': book_id, 'quantity': quantity})
+        print('Data is Inserted')
+
+# Deleting orderlineitem
+
+
+def delete_orderlineitem():
+    book_id = int(input('What is the book id: '))
+    with conn:
+        c.execute("DELETE FROM orderlineitem WHERE book_id = :book_id", {'book_id': book_id})
+        print('Data is removed')
+
+# Modifying orderlineitem
+
+
+def modify_orderlineitem():
+    order_number = int(input('What is the order number to modify: '))
+    book_id = int(input('What is the book id: '))
+    quantity = int(input('What is he quantity: '))
+    with conn:
+        c.execute("""UPDATE orderlineitem SET order_number = :order_number, book_id = :book_id, quantity = :quantity""",
+                  {'order_number': order_number, 'book_id': book_id, 'quantity': quantity})
+        print('Data is Modified')
+
+# Getting all orderlineitem
+
+
+def get_all_orderlineitem():
+    with conn:
+        c.execute("SELECT * FROM orderlineitem")
+        print(c.fetchall())
+
+# Inserting books
+
+
+def insert_books():
+    book_id = int(input('What is the book id: '))
+    isbn = int(input('What is the ISBN: '))
+    title = str(input('What is the title: '))
+    author = str(input('What is the author: '))
+    edition = int(input('What is the edition: '))
+    publisher = str(input('Who is the publisher: '))
+    price = int(input('What is the price: '))
+    with conn:
+        c.execute("INSERT INTO books VALUES (:book_id, :isbn, :title, :author, :edition, :publisher, :price )",
+                  {'book_id': book_id, 'isbn': isbn, 'title': title, 'author': author, 'edition': edition, 'publisher': publisher, 'price':price})
+        print('Data is Inserted')
+
+# Deleting books
+
+
+def delete_books():
+    book_id = int(input('What is the book id: '))
+    with conn:
+        c.execute("DELETE FROM books WHERE book_id = :book_id", {'book_id': book_id})
+        print('Data is removed')
+
+# Modifying books
+
+
+def modify_books():
+    book_id = int(input('What is the book id to modify: '))
+    isbn = int(input('What is the ISBN: '))
+    title = str(input('What is the title: '))
+    author = str(input('What is the author: '))
+    edition = int(input('What is the edition: '))
+    publisher = str(input('Who is the publisher: '))
+    price = int(input('What is the price: '))
+    with conn:
+        c.execute("""UPDATE books SET book_id = :book_id, isbn = :isbn, title = :title, author = :author,
+              edition = :edition, publisher = :publisher WHERE book_id = :book_id""", {'book_id': book_id, 'isbn': isbn, 'title': title, 'author': author, 'edition': edition, 'publisher': publisher, 'price': price})
+        print('Data is Modified')
+
+# getting all books
+
+
+def get_all_books():
+    with conn:
+        c.execute("SELECT * FROM books")
+        print(c.fetchall())
+
+# Making ask function for menu
+
+
+def ask():
+    print('1. Customer')
+    print('2. Orders')
+    print('3. OrderLineItem')
+    print('4. Books')
+    option = int(input('What is your option: '))
+    if option == 1:
+        print1()
+        i = int(input('> '))
+        customer_option[i]()
+    elif option == 2:
+        print1()
+        i = int(input('> '))
+        orders_option[i]()
+    elif option == 3:
+        print1()
+        i = int(input('> '))
+        orderlineitem_option[i]()
+    elif option == 4:
+        print1()
+        i = int(input('> '))
+        books_option[i]()
+    else:
+        print(ERROR[1])
+
+# Making function foe printing the statements
+
+
+def print1():
+    print('1. Insert')
+    print('2. Delete')
+    print('3. Modify')
+    print('4. Get all')
+
+# Avoiding DRY pattern, working with dictionaries makes program faster and advanced
+
+
+customer_option = {
+        1: insert,
+        2: delete,
+        3: modify,
+        4: get_all
+}
+
+orders_option = {
+    1: insert_orders,
+    2: delete_orders,
+    3: modify_orders,
+    4: get_all_orders
+
+}
+
+orderlineitem_option = {
+    1: insert_orderlineitem,
+    2: delete_orderlineitem,
+    3: modify_orderlineitem,
+    4: get_all_orderlineitem
+}
+
+books_option = {
+    1: insert_books,
+    2: delete_books,
+    3: modify_books,
+    4: get_all_books
+}
+# Calling the ask function
+ask()
+conn.commit()
+conn.close()
